@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GroundSurf Evidence Manifest v1",
+  "description": "Portable evidence provenance snapshot exported by GroundSurf. GroundSurf assessment statuses are internal product classifications and do not imply third-party or PDTF verification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest", "report", "semantics", "sources", "evidence"],
+  "properties": {
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "createdAt", "publisher"],
+      "properties": {
+        "name": { "const": "GroundSurf Evidence Manifest" },
+        "version": { "const": "1.0.0" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "publisher": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "website"],
+          "properties": {
+            "name": { "const": "GroundSurf" },
+            "website": { "const": "https://groundsurf.net" }
+          }
+        }
+      }
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "generatedAt", "country", "language", "site"],
+      "properties": {
+        "id": { "type": ["string", "null"] },
+        "generatedAt": { "type": ["string", "null"] },
+        "country": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "code"],
+          "properties": {
+            "name": { "type": ["string", "null"] },
+            "code": { "type": ["string", "null"] }
+          }
+        },
+        "language": { "type": ["string", "null"] },
+        "site": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["label", "latitude", "longitude", "areaM2"],
+          "properties": {
+            "label": { "type": ["string", "null"] },
+            "latitude": { "type": ["number", "null"], "minimum": -90, "maximum": 90 },
+            "longitude": { "type": ["number", "null"], "minimum": -180, "maximum": 180 },
+            "areaM2": { "type": ["number", "null"], "minimum": 0 }
+          }
+        }
+      }
+    },
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["purpose", "statusNote", "statuses", "retrievalNote"],
+      "properties": {
+        "purpose": { "type": "string" },
+        "statusNote": { "type": "string" },
+        "statuses": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["VERIFIED", "MODELLED", "REQUIRES_VERIFICATION"],
+          "properties": {
+            "VERIFIED": { "type": "string" },
+            "MODELLED": { "type": "string" },
+            "REQUIRES_VERIFICATION": { "type": "string" }
+          }
+        },
+        "retrievalNote": { "type": "string" }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "organization", "url", "reportedStatus"],
+        "properties": {
+          "name": { "type": "string" },
+          "organization": { "type": ["string", "null"] },
+          "url": { "type": ["string", "null"], "format": "uri" },
+          "reportedStatus": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["evidenceId", "category", "claim", "source", "spatialContext", "method", "groundSurfAssessment", "retrievedAt"],
+        "properties": {
+          "evidenceId": { "type": "string", "minLength": 1 },
+          "category": { "type": "string" },
+          "claim": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["text", "language"],
+            "properties": {
+              "text": { "type": "string" },
+              "language": { "type": ["string", "null"] }
+            }
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "url", "datasetDate", "sourceRecordReference"],
+            "properties": {
+              "name": { "type": "string" },
+              "url": { "type": ["string", "null"], "format": "uri" },
+              "datasetDate": { "type": ["string", "null"] },
+              "sourceRecordReference": { "type": ["string", "null"] }
+            }
+          },
+          "spatialContext": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["relationship", "distanceM"],
+            "properties": {
+              "relationship": { "type": "string" },
+              "distanceM": { "type": ["number", "null"], "minimum": 0 }
+            }
+          },
+          "method": { "type": "string" },
+          "groundSurfAssessment": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "confidence", "limitation"],
+            "properties": {
+              "status": { "enum": ["VERIFIED", "MODELLED", "REQUIRES_VERIFICATION"] },
+              "confidence": { "enum": ["High", "Medium", "Low"] },
+              "limitation": { "type": "string" }
+            }
+          },
+          "retrievedAt": { "type": ["string", "null"] },
+          "value": {}
+        }
+      }
+    }
+  }
+}
